@@ -15,6 +15,19 @@ mvn exec:java "-Dexec.mainClass=com.patrones.u2.Main"
 
 ## Decisiones de diseño
 
+#Preguntas Diagnosticas
+
+1. ¿Un solo producto que varía por formato, o una familia que debe mantenerse coherente?
+Acá hay dos productos relacionados por exportación: el cuerpo (ReportBody) y el encabezado/pie (ReportHeaderFooter). El enunciado es explícito: no se puede mezclar cuerpo PDF con encabezado Excel. Eso es una familia de productos que debe permanecer consistente → apunta a Abstract Factory, no a Factory Method (que resuelve la creación de un único producto).
+
+2. ¿Agregar CSV implica una implementación nueva o una familia nueva completa?
+Al agregar CSV necesitarás CsvReportBody + CsvHeaderFooter + CsvReportFactory — una familia completa nueva, no solo una clase suelta. Refuerza Abstract Factory.
+
+3. ¿El riesgo es "clase equivocada" o "mezcla de familias"?
+El riesgo real que describe el problema es justamente mezclar piezas de formatos distintos (cuerpo de un formato + encabezado de otro), que es exactamente lo que Abstract Factory previene al obligar a crear ambos productos desde la misma fábrica concreta.
+
+Conclusión: Abstract Factory. Se descarta Factory Method porque ese patrón resuelve bien la creación de un solo producto con variantes (por ejemplo, si solo existiera ReportBody sin necesidad de mantenerlo coherente con nada más), pero aquí necesitamos garantizar que dos productos relacionados salgan siempre de la misma familia — eso es precisamente lo que Factory Method no controla por sí solo.
+
 ### Decisión 1 — Factory Method vs. Abstract Factory (Parte 1)
 
 **Patrón elegido:** Abstract Factory
